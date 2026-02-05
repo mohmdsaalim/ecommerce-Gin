@@ -140,3 +140,11 @@ Request
 
 # check the container are running 
  // docker ps
+
+
+
+# Injections
+	Use PostgreSQL as Repository
+	•	Inject it into AuthService
+	•	AuthService is injected into Controller
+	•	Controller is used by routes

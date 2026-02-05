@@ -3,21 +3,58 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/controllers"
+	"github.com/mohmdsaalim/ecommerce-Gin/internal/middlewares"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/services"
 )
 
 
-func RegisterRoute(r *gin.Engine , authService *services.AuthService) {
+func RegisterRoute(
+	r *gin.Engine ,
+	authService *services.AuthService,
+	productService *services.ProductService,
+	) {
+	// injecting the service into -> controller 
 	authController := controllers.NewAuthController(authService)
+	productController := controllers.NewProductController(productService)
 
-// checking route
+	// checking route
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status":"OK"})
 	})
-// PUBLIC routes
-	auth := r.Group("/auth")
+
+	// PUBLIC routes
+	auth := r.Group("/")
 	{
-		auth.POST("/register", authController.Register)
-		auth.POST("/login", authController.Login)
+		auth.POST("/auth/register", authController.Register) // completed -> checked
+		auth.POST("/auth/login", authController.Login) // completed -> checked
+		auth.GET("/products", productController.GetProducts)// completed -> checked
+		auth.GET("/products/:id", productController.GetProductById)// completed -> checked 
+		auth.GET("/categories")// pending
+		auth.GET("/categories/:id/products") // pending
+
+	}
+
+	// User routes 
+	user := r.Group("/")
+	user.Use(middlewares.AuthMiddleWare())
+	{
+		user.GET("/profile") // for checking purpose
+		user.GET("/cart")
+		user.POST("/cart/items")
+		user.PUT("/cart/item/:id")
+		user.DELETE("/cart/items/:id")
+		user.POST("/orders")
+		user.GET("/orders")
+		user.GET("orders/:id")
+	}
+
+	// admin routes
+	admin := r.Group("/admin")
+	admin.Use(
+		middlewares.AuthMiddleWare(),
+		middlewares.RequareRole("ADMIN"),
+	)
+	{
+
 	}
 }

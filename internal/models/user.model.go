@@ -13,7 +13,7 @@ type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
-
+// user model -> db
 type User struct {
 	gorm.Model
 	Email         string `gorm:"size:255;uniqueIndex;not null"`

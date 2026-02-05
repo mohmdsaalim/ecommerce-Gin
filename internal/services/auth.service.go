@@ -11,10 +11,11 @@ import (
 type AuthService struct {
 	repo repositories.Repository
 }
-
+// costructer from main -> service
 func NewAuthService(repo repositories.Repository) *AuthService {
 	return &AuthService{repo: repo}
 }
+
 // register service
 func (s *AuthService) Register(username, email, password string) error {
 	hashedPassword, err := utils.HashPassword(password)
@@ -32,19 +33,26 @@ func (s *AuthService) Register(username, email, password string) error {
 	}
 
 	return s.repo.Insert(user)
-
 }
 
-// Login service 
 func (s *AuthService) Login(email, password string) (string, error) {
 	var user models.User
 
-	if err := s.repo.FindByID(&user, email); err != nil{
+	//  Fetch user by email
+	if err := s.repo.FindOne(&user, "email = ?", email); err != nil {
 		return "", errors.New("invalid credentials")
 	}
 
+	// Check password
 	if !utils.Checkpassword(user.PasswordHash, password) {
-		return "", errors.New("invalid credentails")
+		return "", errors.New("invalid credentials")
 	}
-	return utils.GenerateToken(user.ID, user.Role)
+
+	//  Generate JWT
+	token, err := utils.GenerateToken(user.ID, user.Role)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

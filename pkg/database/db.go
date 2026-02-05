@@ -40,7 +40,10 @@ func ConnectPostgres() {
 	}
 
 	// Automigrate 
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(
+		&models.User{},
+		&models.Product{},
+	)
 	if err != nil {
 		log.Fatal("Auto-migrate Failed:", err)//Automigrate handlng
 	}

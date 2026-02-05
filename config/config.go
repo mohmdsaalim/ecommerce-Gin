@@ -32,7 +32,7 @@ type Config struct {
 	} `yaml:"redis"`
 }
 
-var AppConfig *Config
+var AppConfig *Config // globally accessable
 
 func LoadConfig() {
 	file, err := os.Open("config/config.yaml")
