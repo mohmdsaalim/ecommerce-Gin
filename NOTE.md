@@ -161,3 +161,265 @@ When you need:
 	•	Sorting
 	•	Aggregations
 	•	Business logic filtering
+
+
+
+
+
+
+
+
+
+
+
+
+
+  package controllers
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/mohmdsaalim/ecommerce-Gin/internal/models"
+	"github.com/mohmdsaalim/ecommerce-Gin/internal/services"
+)
+
+type ProductController struct {
+	service *services.ProductService
+}
+
+// NewProductController creates a new product controller instance
+func NewProductController(service *services.ProductService) *ProductController {
+	return &ProductController{service: service}
+}
+
+// ============================================
+// PRODUCT RETRIEVAL ENDPOINTS
+// ============================================
+
+// GetProducts handles multiple query scenarios:
+// GET /products - Get all products
+// GET /products?category=kits - Get products by category
+// GET /products?sub_category=home - Get products by subcategory
+// GET /products?search=barcelona - Search products
+func (ctrl *ProductController) GetProducts(c *gin.Context) {
+	category := c.Query("category")
+	subCategory := c.Query("sub_category")
+	search := c.Query("search")
+
+	var products []models.Product
+	var err error
+
+	// Handle different query parameters
+	switch {
+	case search != "":
+		// Search functionality
+		products, err = ctrl.service.SearchProducts(search)
+		
+	case category != "":
+		// Filter by category
+		products, err = ctrl.service.GetProductsByCategory(category)
+		
+	case subCategory != "":
+		// Filter by subcategory
+		products, err = ctrl.service.GetProductsBySubCategory(subCategory)
+		
+	default:
+		// Get all products
+		products, err = ctrl.service.GetAllProducts()
+	}
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"count":   len(products),
+		"data":    products,
+	})
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// GetProductByID retrieves a single product by ID
+// GET /products/:id
+func (ctrl *ProductController) GetProductByID(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid product ID",
+		})
+		return
+	}
+
+	product, err := ctrl.service.GetProductByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"data":    product,
+	})
+}
+
+// ============================================
+// PRODUCT MANAGEMENT ENDPOINTS (ADMIN)
+// ============================================
+
+// CreateProduct creates a new product
+// POST /products
+// Body: JSON product data
+func (ctrl *ProductController) CreateProduct(c *gin.Context) {
+	var product models.Product
+
+	if err := c.ShouldBindJSON(&product); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid request body: " + err.Error(),
+		})
+		return
+	}
+
+	if err := ctrl.service.CreateProduct(&product); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"success": true,
+		"message": "Product created successfully",
+		"data":    product,
+	})
+}
+
+// UpdateProduct updates an existing product
+// PUT /products/:id
+// Body: JSON with fields to update
+func (ctrl *ProductController) UpdateProduct(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid product ID",
+		})
+		return
+	}
+
+	var updates map[string]interface{}
+	if err := c.ShouldBindJSON(&updates); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid request body: " + err.Error(),
+		})
+		return
+	}
+
+	if err := ctrl.service.UpdateProduct(uint(id), updates); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Product updated successfully",
+	})
+}
+
+// DeleteProduct soft deletes a product
+// DELETE /products/:id
+func (ctrl *ProductController) DeleteProduct(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid product ID",
+		})
+		return
+	}
+
+	if err := ctrl.service.DeleteProduct(uint(id)); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Product deleted successfully",
+	})
+}
+
+// ============================================
+// ADDITIONAL ENDPOINTS
+// ============================================
+
+// CheckProductAvailability checks if a product variant has enough stock
+// GET /products/check-availability/:variant_id?quantity=2
+func (ctrl *ProductController) CheckProductAvailability(c *gin.Context) {
+	variantID, err := strconv.ParseUint(c.Param("variant_id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid variant ID",
+		})
+		return
+	}
+
+	quantityStr := c.DefaultQuery("quantity", "1")
+	quantity, err := strconv.Atoi(quantityStr)
+	if err != nil || quantity <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Invalid quantity",
+		})
+		return
+	}
+
+	isAvailable, err := ctrl.service.CheckProductAvailability(uint(variantID), quantity)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success":   true,
+		"available": isAvailable,
+		"variant_id": variantID,
+		"quantity":   quantity,
+	})
+}

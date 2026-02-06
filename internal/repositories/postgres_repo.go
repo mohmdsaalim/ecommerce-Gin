@@ -48,11 +48,3 @@ func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, 
 	for _, preload := range preloads { db = db.Preload(preload) }
 	return db.Find(dest).Error
 }
-
-// // Product specific medhods
-// func (r *PgSQLRepository) GetAllProducts() ([]models.Product, error) {
-// 	var products []models.Product
-
-// 	err := r.db.Preload("Variants").Where("is_active = ?", true).Order("created_at DESC").Find(&products).Error
-// 	return products, err
-// }

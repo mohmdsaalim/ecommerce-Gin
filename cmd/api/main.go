@@ -13,9 +13,8 @@ import (
 func main() {
 	config.LoadConfig()
 	database.ConnectPostgres()
-
 	r := gin.Default()
-
+	
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
