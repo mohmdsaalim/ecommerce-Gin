@@ -22,8 +22,8 @@ type User struct {
 	Role          string `gorm:"size:100;not null"`
 	Status        string `gorm:"size:50;default:active"`
 	EmailVerified bool
-	// ProfilePic    ProfilePic `gorm:"constraint:OnDelete:CASCADE;foreignKey:UserID"`
-	// Address       Address    `gorm:"constraint:OnDelete:CASCADE;foreignKey:UserID"`
+
+	Cart          *Cart   `gorm:"foreignKey:UserID" json:"cart,omitempty"`
 }
 
 

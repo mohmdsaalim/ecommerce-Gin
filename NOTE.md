@@ -148,3 +148,16 @@ Request
 	•	Inject it into AuthService
 	•	AuthService is injected into Controller
 	•	Controller is used by routes
+
+
+
+❌ When Generic Repo Is NOT Enough
+
+When you need:
+	•	Preload("Category")
+	•	Joins()
+	•	Complex filtering
+	•	Pagination
+	•	Sorting
+	•	Aggregations
+	•	Business logic filtering

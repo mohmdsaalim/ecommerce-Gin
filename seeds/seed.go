@@ -13,8 +13,9 @@ func RunSeeds(db *gorm.DB) error {
 	if err := SeedUsers(db); err != nil{
 		return err
 	}// completed 
-	if err := SeedProducts(db); err != nil{
+	
+	 if err := SeedProducts(db); err != nil{
 		return err
-	}
+	 }
 	return nil
 }

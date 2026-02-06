@@ -1,11 +1,10 @@
 package controllers
 
 import (
-	"net/http"
-	"strconv"
+	// "net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mohmdsaalim/ecommerce-Gin/internal/models"
+	// "github.com/mohmdsaalim/ecommerce-Gin/internal/models"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/services"
 )
 
@@ -17,58 +16,51 @@ func NewProductController(service *services.ProductService) *ProductController {
 	return &ProductController{service: service}
 }
 
-// GET /product  public API -> get all product
-func(pc *ProductController) GetProducts(c *gin.Context){
-	products, err := pc.service.ListProducts()
-	if err != nil{
-		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+// GetProducts handles multiple query scenarios:
+// GET /products - Get all products
+// GET /products?category=kits - Get products by category
+// GET /products?sub_category=home - Get products by subcategory
+// GET /products?search=barcelona - Search products
+
+// func (ctrl *ProductController) GetAllProducts(c *gin.Context) {
+// 	// category := c.Query("category")
+// 	// subcategory := c.Query("sub_category")
+// 	// search := c.Query("search")
+
+
+// 	var products []models.Product
+// 	var err error
+
+// 	// handling query params 
+
+// 	// switch{
+// 	// case search != "":
+// 	// 	products, err = 
+// 	// }
+// 	products, err = ctrl.service.GetAllProducts()
+
+// 	if err != nil{
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"success":false,
+// 			"error": err.Error(),
+// 		})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"success":true,
+// 		"count":len(products),
+// 		"data":products,
+// 	})
+// }
+
+func (pc *ProductController) GetProducts(c *gin.Context) {
+	category := c.Query("category")
+
+	products, err := pc.service.GetAllProducts(category)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data":products})
-}
-
-//  GET / product/:id pubils API -> get single product
-func (pc *ProductController) GetProductById(c *gin.Context){
-	idParam := c.Param("id")
-
-	id, err := strconv.Atoi(idParam)
-	if err != nil{
-		c.JSON(http.StatusUnauthorized, gin.H{"error":"invalid id"})
-		return
-	}
-
-	product, err := pc.service.GetProductById(uint(id))
-	if err != nil{
-		c.JSON(http.StatusBadRequest,gin.H{"error":"product not found"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data":product})
-}
-
-
-func (pc *ProductController) GetProductsBycat(c *gin.Context) {
-	categorySlug := c.Query("category")
-
-	var products []models.Product
-	var err error
-
-	if categorySlug != "" {
-        // Filter by category
-        // products, err = pc.service.GetProductsBycategory(categorySlug)
-    } else {
-        // Get all products
-        products, err = pc.service.ListProducts()
-    }
-    
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-    
-    c.JSON(http.StatusOK, gin.H{
-        "success": true,
-        "count":   len(products),
-        "data":    products,
-    })
+	c.JSON(200, products)
 }

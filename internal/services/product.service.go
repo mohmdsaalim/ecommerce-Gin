@@ -14,13 +14,27 @@ func NewProductService(repo repositories.Repository) *ProductService {
 		repo: repo,
 	}
 }
-func (s *ProductService) ListProducts() ([]models.Product, error) {
-	// Use the specialized method that loads categories and variants
-	return s.repo.FindAllProductsWithCategory()
-}
 
-func (s *ProductService) GetProductById(id uint) (*models.Product, error) {
-	// Use the specialized method that loads categories and variants
-	return s.repo.FindProductWithCategory(id)
-}
 
+// GetAllProduct - returns all active products
+func (s *ProductService) GetAllProducts(category string) ([]models.Product, error) {
+	var products []models.Product
+
+	query := "is_active = ?"
+	args := []interface{}{true}
+
+	if category != "" {
+		query += " AND category = ?"
+		args = append(args, category)
+	}
+
+	err := s.repo.FindAll(
+		&products,
+		query,
+		"created_at DESC",
+		[]string{"Variants"},
+		args...,
+	)
+
+	return products, err
+}

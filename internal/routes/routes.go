@@ -28,9 +28,9 @@ func RegisterRoute(
 		auth.POST("/auth/register", authController.Register) // completed -> checked
 		auth.POST("/auth/login", authController.Login) // completed -> checked
 		auth.GET("/products", productController.GetProducts)// completed -> checked
-		auth.GET("/products/:id", productController.GetProductById)// completed -> checked 
-		auth.GET("/categories")// pending
-		auth.GET("/categories/:id/products") // pending
+		auth.GET("/products/:id", )// completed -> checked 
+		auth.GET("/products/kits",)// completed -> checked today 06
+		auth.GET("/products/lifestyles",)// completed -> checked today 06
 
 	}
 
