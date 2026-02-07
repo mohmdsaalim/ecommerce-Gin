@@ -14,11 +14,12 @@ func RegisterDependencies(r *gin.Engine) {
 	// services
 	authService := services.NewAuthService(repo)
 	productService := services.NewProductService(repo)
-
+	cartService := services.NewCartService(repo)
 	// routes
 	routes.RegisterRoute(
 		r, // passed gin Engine
 		authService, // auth service
 		productService, // productService
+		cartService,
 		)
 }

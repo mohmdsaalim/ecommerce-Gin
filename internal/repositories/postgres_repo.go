@@ -37,10 +37,9 @@ func (r *PgSQLRepository) Delete(model interface{}, id interface{}) error {
 	return r.db.Delete(model, id).Error
 }
 
-func (r *PgSQLRepository) FindOne(dest interface{}, query string, args ...interface{}) error {
-	return r.db.Where(query, args...).First(dest).Error
+func (r *PgSQLRepository) FindOne(dest interface{}, query string, preloads []string, args ...interface{}) error {
+	db := r.db; if query != "" { db = db.Where(query, args...) }; for _, p := range preloads { db = db.Preload(p) }; return db.First(dest).Error
 }
-
 func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, preloads []string, args ...interface{}) error {
 	db := r.db
 	if query != "" { db = db.Where(query, args...) }

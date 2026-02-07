@@ -39,7 +39,7 @@ func (s *AuthService) Login(email, password string) (string, error) {
 	var user models.User
 
 	//  Fetch user by email
-	if err := s.repo.FindOne(&user, "email = ?", email); err != nil {
+	if err := s.repo.FindOne(&user, "email = ?",nil, email,); err != nil {
 		return "", errors.New("invalid credentials")
 	}
 

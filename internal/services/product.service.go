@@ -127,7 +127,7 @@ func (s *ProductService) GetProductByID(id uint) (*models.Product, error) {
 
 	err := s.repo.FindOne(
 		&product,
-		"id = ? AND is_active = ?",
+		"id = ? AND is_active = ?",nil,
 		id,
 		true,
 	)
