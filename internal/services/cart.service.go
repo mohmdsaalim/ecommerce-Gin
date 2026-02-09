@@ -100,5 +100,5 @@ func (s *CartService) UpdateCartItem(itemID uint, qty int) error {
 
 // to remove the cart item
 func (s *CartService) RemoveItem(itemID uint) error {
-	return s.repo.Delete(&models.CartItem{}, itemID)
+	return s.repo.Delete(&models.CartItem{},"id = ?", itemID)
 }

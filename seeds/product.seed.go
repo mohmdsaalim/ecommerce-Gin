@@ -2,6 +2,7 @@ package seeds
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/models"
 	"gorm.io/gorm"
@@ -20,9 +21,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      89.99,
 			SKU:            "KIT-HOME-2425-001",
 			Season:         "2024/25",
-			PrimaryImage:   "https://example.com/images/products/barca-home-kit-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-home-kit-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-home-kit-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/HJ4590-456_415227879_D_A_1X1_2laliga_92b83d62-53fe-4728-b143-3b8653e39427.jpg?v=1763654921&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/HJ4590-456_415227879_D_E_1X1_0fb3accd-440b-43d9-b5c8-db59754589ae.jpg?v=1763654921&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/HJ4590-456_415227879_D_D_1X1_e49a5dea-e5e6-46b2-b1cf-ae3500e62d90.jpg?v=1763654921&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -65,9 +66,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      89.99,
 			SKU:            "KIT-AWAY-2425-002",
 			Season:         "2024/25",
-			PrimaryImage:   "https://example.com/images/products/barca-away-kit-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-away-kit-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-away-kit-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/base-ambilight_1.webp?v=6857459708159031844",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/fcbarcelonanikefootball-29_2.jpg?v=1753762193&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/HJ4554-784_431735159_D_C_1X1_ddb660d8-72dc-4d0f-9c48-845bc43d0031.jpg?v=1753762193&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -110,9 +111,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      89.99,
 			SKU:            "KIT-THIRD-2425-003",
 			Season:         "2024/25",
-			PrimaryImage:   "https://example.com/images/products/barca-third-kit-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-third-kit-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-third-kit-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/HM3193-855_415228861_D_A_1X1_a5a536e9-71ea-4bcf-9723-08165902f26f.jpg?v=1755587326&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/Imagen3_0e6e6a49-38c6-4f84-b6b3-123831c6e498.jpg?v=1755587326&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/HM3193-855_415228861_D_B_1X1_858efe83-fb6b-45b2-83cf-9065ec597f56.jpg?v=1755587326&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -155,9 +156,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      84.99,
 			SKU:            "KIT-GK-2425-004",
 			Season:         "2024/25",
-			PrimaryImage:   "https://example.com/images/products/barca-gk-kit-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-gk-kit-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-gk-kit-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/HQ9290-511_419456431_D_C_1X1_b7bd6a5d-4f17-4b98-8c6a-acdfa158b23a.jpg?v=1753764164&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/HQ9290-511_419456431_D_D_1X1_37d599fa-7a8f-42c0-907b-032535d7aec7.jpg?v=1753764164&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/HQ9290-511_419456431_D_B_1X1_d905d573-d384-4190-b60d-0e11842d55ae.jpg?v=1753764164&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -199,10 +200,10 @@ func SeedProducts(db *gorm.DB) error {
 			SubCategory:    "Retro",
 			BasePrice:      79.99,
 			SKU:            "KIT-RETRO-1999-005",
-			Season:         "Retro",
-			PrimaryImage:   "https://example.com/images/products/barca-retro-1999-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-retro-1999-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-retro-1999-thumb.jpg",
+			Season:         "fourth",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/4Kit_SergiAlcazar_Ecom_044_1_e0846158-4a88-4306-a2fd-2b3e19943a11.jpg?v=1767964096&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/16_1a4ee356-5197-4c11-b91e-d8ace6ddd127.jpg?v=1767964096&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/15_94c2120f-2a60-4a26-a00a-cbae1b986211.jpg?v=1767964096&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -245,9 +246,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      69.99,
 			SKU:            "LIFE-HOODIE-001",
 			Season:         "All Season",
-			PrimaryImage:   "https://example.com/images/products/barca-hoodie-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-hoodie-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-hoodie-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/Retro_Players_Baixa--2.jpg?v=1763462759&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/BZ3A1281.jpg?v=1763462759&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/BZ3A1289.jpg?v=1763462759&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -290,9 +291,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      54.99,
 			SKU:            "LIFE-POLO-002",
 			Season:         "All Season",
-			PrimaryImage:   "https://example.com/images/products/barca-polo-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-polo-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-polo-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/Bolet_Baixa-11795.jpg?v=1765970839&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/Bolet_Baixa-11825.jpg?v=1765970839&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/BLMP898003_1_1d16cce7-d927-4e3a-8b0f-4a383ab21674.jpg?v=1765970839&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -335,9 +336,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      74.99,
 			SKU:            "LIFE-RETRO-003",
 			Season:         "All Season",
-			PrimaryImage:   "https://example.com/images/products/barca-track-jacket-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-track-jacket-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-track-jacket-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/IMG_6325.jpg?v=1737554661&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/IMG_7943.jpg?v=1737554661&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/BLMP740011_1.jpg?v=1737471543&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -380,9 +381,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      59.99,
 			SKU:            "LIFE-POLO-TRAIN-004",
 			Season:         "2024/25",
-			PrimaryImage:   "https://example.com/images/products/barca-training-polo-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-training-polo-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-training-polo-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/products/700x1060-BLMP0008120102-1.jpg?v=1680014731&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/files/BLMP0008120102_3_1.jpg?v=1698158764&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/BLMP0008120102_3.jpg?v=1698158763&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -425,9 +426,9 @@ func SeedProducts(db *gorm.DB) error {
 			BasePrice:      64.99,
 			SKU:            "LIFE-HOODIE-FLEECE-005",
 			Season:         "Fall/Winter",
-			PrimaryImage:   "https://example.com/images/products/barca-fleece-hoodie-front.jpg",
-			SecondaryImage: "https://example.com/images/products/barca-fleece-hoodie-back.jpg",
-			ThumbnailImage: "https://example.com/images/products/barca-fleece-hoodie-thumb.jpg",
+			PrimaryImage:   "https://store.fcbarcelona.com/cdn/shop/files/2023-04-24-BLM-TOMASSATORANSKY-2218.jpg?v=1727089507&width=1200",
+			SecondaryImage: "https://store.fcbarcelona.com/cdn/shop/products/700x1060-BLM2BHC-1.jpg?v=1689944517&width=1200",
+			ThumbnailImage: "https://store.fcbarcelona.com/cdn/shop/files/FCB_13_04_23_Dia_2_S_022_1740.jpg?v=1689944509&width=1200",
 			IsActive:       true,
 			Variants: []models.ProductVariant{
 				{
@@ -465,39 +466,61 @@ func SeedProducts(db *gorm.DB) error {
 	}
 
 	// Upsert products with variants using SKU as the conflict key
-	for _, product := range products {
-		// First, upsert the product
-		if err := db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "sku"}},
-			DoUpdates: clause.AssignmentColumns([]string{
-				"name", "description", "category", "sub_category",
-				"base_price", "season", "primary_image", "secondary_image",
-				"thumbnail_image", "is_active", "updated_at",
-			}),
-		}).Create(&product).Error; err != nil {
+	for i := range products {
+
+		product := &products[i]
+
+		// 1️⃣ Upsert Product (WITHOUT auto-saving variants)
+		if err := db.
+			Omit("Variants").
+			Clauses(clause.OnConflict{
+				Columns: []clause.Column{{Name: "sku"}},
+				DoUpdates: clause.Assignments(map[string]interface{}{
+					"name":            product.Name,
+					"description":     product.Description,
+					"category":        product.Category,
+					"sub_category":    product.SubCategory,
+					"base_price":      product.BasePrice,
+					"season":          product.Season,
+					"primary_image":   product.PrimaryImage,
+					"secondary_image": product.SecondaryImage,
+					"thumbnail_image": product.ThumbnailImage,
+					"is_active":       product.IsActive,
+					"updated_at":      time.Now(),
+				}),
+			}).Create(product).Error; err != nil {
 			return fmt.Errorf("failed to seed product %s: %w", product.SKU, err)
 		}
 
-		// Fetch the product ID after upsert
+		// 2️⃣ Get Product ID
 		var existingProduct models.Product
-		if err := db.Where("sku = ?", product.SKU).First(&existingProduct).Error; err != nil {
+		if err := db.Where("sku = ?", product.SKU).
+			First(&existingProduct).Error; err != nil {
 			return fmt.Errorf("failed to fetch product %s: %w", product.SKU, err)
 		}
 
-		// Upsert variants
-		for _, variant := range product.Variants {
+		// 3️⃣ Upsert Variants
+		for j := range product.Variants {
+
+			variant := &product.Variants[j]
 			variant.ProductID = existingProduct.ID
-			if err := db.Clauses(clause.OnConflict{
-				Columns:   []clause.Column{{Name: "sku"}},
-				DoUpdates: clause.AssignmentColumns([]string{
-					"product_id", "size", "stock", "is_active", "updated_at",
-				}),
-			}).Create(&variant).Error; err != nil {
+
+			if err := db.
+				Clauses(clause.OnConflict{
+					Columns: []clause.Column{{Name: "sku"}},
+					DoUpdates: clause.Assignments(map[string]interface{}{
+						"product_id": variant.ProductID,
+						"size":       variant.Size,
+						"stock":      variant.Stock,
+						"is_active":  variant.IsActive,
+						"updated_at": time.Now(),
+					}),
+				}).Create(variant).Error; err != nil {
 				return fmt.Errorf("failed to seed variant %s: %w", variant.SKU, err)
 			}
 		}
 
-		fmt.Printf("  ✓ Seeded/Updated product: %s (SKU: %s)\n", product.Name, product.SKU)
+		fmt.Printf("✓ Seeded/Updated product: %s (SKU: %s)\n", product.Name, product.SKU)
 	}
 
 	fmt.Println("✅ Products seeding completed!")

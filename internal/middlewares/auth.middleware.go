@@ -71,8 +71,9 @@ func AuthMiddleWare() gin.HandlerFunc {
 		}
 
 		//  Attach to context
-		c.Set("user_id", uint(userID))
+		c.Set("userID", uint(userID))
 		c.Set("role", role)
 		c.Next()
+		
 	}
 }

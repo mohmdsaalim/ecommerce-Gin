@@ -24,6 +24,7 @@ type User struct {
 	EmailVerified bool
 
 	Cart          *Cart   `gorm:"foreignKey:UserID" json:"cart,omitempty"`
+	Addresses []Address `gorm:"foreignKey:UserID" json:"addresses,omitempty"`
 }
 
 

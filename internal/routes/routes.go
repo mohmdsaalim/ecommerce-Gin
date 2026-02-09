@@ -13,11 +13,15 @@ func RegisterRoute(
 	authService *services.AuthService,
 	productService *services.ProductService,
 	cartService *services.CartService,
+	orderService *services.OrderService,
+	userSrevice *services.UserService,
 	) {
 	// injecting the service into -> controller 
 	authController := controllers.NewAuthController(authService)
 	productController := controllers.NewProductController(productService)
 	cartController := controllers.NewCartController(cartService)
+	orderController := controllers.NewOrderController(orderService)
+	userController := controllers.NewUserController(userSrevice)
 	// checking route
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status":"OK"})
@@ -36,14 +40,16 @@ func RegisterRoute(
 	user := r.Group("/")
 	user.Use(middlewares.AuthMiddleWare())
 	{
-		user.GET("/profile") // for checking purpose
+		user.GET("/profile", userController.GetProfile)// completed -> checked
+		user.PUT("/profile", userController.UpdateProfile)// completed -> checked 
+		user.POST("/profile/address", userController.AddAddress)// completed -> checked 
 		user.GET("/cart", cartController.GetCart)// completed -> checked 
 		user.POST("/cart/items", cartController.AddToCart)// completed -> checked 
 		user.PUT("/cart/item/:id", cartController.UpdateItem)
 		user.DELETE("/cart/items/:id", cartController.RemoveItem)// completed -> checked 
-		user.POST("/orders")
-		user.GET("/orders")
-		user.GET("orders/:id")
+		user.POST("/orders", orderController.CreateOrder)
+		user.GET("/orders", orderController.GetOrders)
+		user.GET("orders/:id", orderController.GetOrderByID)
 	}
 
 	// admin routes

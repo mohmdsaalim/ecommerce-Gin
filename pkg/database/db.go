@@ -46,6 +46,10 @@ func ConnectPostgres() {
 		&models.ProductVariant{},
 		&models.Cart{},
 		&models.CartItem{},
+		&models.Order{},	
+		&models.OrderItem{},
+		&models.Address{},
+
 	)
 	if err != nil {
 		log.Fatal("Auto-migrate Failed:", err)//Automigrate handlng

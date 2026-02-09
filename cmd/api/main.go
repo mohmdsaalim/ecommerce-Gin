@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/mohmdsaalim/ecommerce-Gin/config"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/app"
@@ -14,13 +13,6 @@ func main() {
 	config.LoadConfig()
 	database.ConnectPostgres()
 	r := gin.Default()
-	
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}))
 
 	app.RegisterDependencies(r)
 

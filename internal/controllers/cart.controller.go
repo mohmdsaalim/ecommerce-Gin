@@ -19,7 +19,7 @@ func NewCartController(service *services.CartService) *CartController {
 // Get the Cart item 
 func (cc *CartController) GetCart(c *gin.Context) {
 
-	userID := c.GetUint("user_id") // from JWT middleware
+	userID := c.GetUint("userID") // from JWT middleware
 
 	cart, err := cc.service.GetCart(userID)
 	if err != nil {
@@ -39,7 +39,7 @@ type AddCartRequest struct {
 
 func (cc *CartController) AddToCart(c *gin.Context) {
 
-	userID := c.GetUint("user_id")
+	userID := c.GetUint("userID")
 
 	var req AddCartRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
