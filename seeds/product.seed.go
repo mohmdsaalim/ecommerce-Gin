@@ -470,7 +470,7 @@ func SeedProducts(db *gorm.DB) error {
 
 		product := &products[i]
 
-		// 1️⃣ Upsert Product (WITHOUT auto-saving variants)
+		//  Upsert Product (WITHOUT auto-saving variants)
 		if err := db.
 			Omit("Variants").
 			Clauses(clause.OnConflict{
@@ -492,14 +492,14 @@ func SeedProducts(db *gorm.DB) error {
 			return fmt.Errorf("failed to seed product %s: %w", product.SKU, err)
 		}
 
-		// 2️⃣ Get Product ID
+		// Get Product ID
 		var existingProduct models.Product
 		if err := db.Where("sku = ?", product.SKU).
 			First(&existingProduct).Error; err != nil {
 			return fmt.Errorf("failed to fetch product %s: %w", product.SKU, err)
 		}
 
-		// 3️⃣ Upsert Variants
+		//  Upsert Variants
 		for j := range product.Variants {
 
 			variant := &product.Variants[j]

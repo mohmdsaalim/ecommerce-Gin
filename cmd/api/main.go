@@ -10,13 +10,15 @@ import (
 )
 
 func main() {
-	config.LoadConfig()
-	database.ConnectPostgres()
-	r := gin.Default()
+
+	config.LoadConfig()// config loading
+	database.ConnectPostgres() // db connection 
+	r := gin.Default() // Gin Engine
 
 	app.RegisterDependencies(r)
 
 	port := config.AppConfig.App.Port
 	log.Printf("🚀 Server running at http://localhost:%s", port)
 	r.Run(":" + port)
+
 }

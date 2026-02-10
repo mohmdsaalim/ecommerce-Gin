@@ -40,12 +40,12 @@ func (s *AuthService) Login(email, password string) (string, error) {
 
 	//  Fetch user by email
 	if err := s.repo.FindOne(&user, "email = ?",nil, email,); err != nil {
-		return "", errors.New("invalid credentials")
+		return "", errors.New("invalid Email")
 	}
 
 	// Check password
 	if !utils.Checkpassword(user.PasswordHash, password) {
-		return "", errors.New("invalid credentials")
+		return "", errors.New("invalid Password")
 	}
 
 	//  Generate JWT

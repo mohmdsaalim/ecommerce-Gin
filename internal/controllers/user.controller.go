@@ -29,6 +29,8 @@ func (uc *UserController) GetProfile(c *gin.Context) {
 
 	c.JSON(200, user)
 }
+
+
 // Update Post
 func (uc *UserController) UpdateProfile(c *gin.Context) {
 
@@ -49,6 +51,7 @@ func (uc *UserController) UpdateProfile(c *gin.Context) {
 
 	c.JSON(200, gin.H{"message": "Profile updated successfully"})
 }
+
 
 // post the address
 func (uc *UserController) AddAddress(c *gin.Context) {

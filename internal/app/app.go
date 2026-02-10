@@ -20,6 +20,7 @@ func RegisterDependencies(r *gin.Engine) {
 	cartService := services.NewCartService(repo)
 	orderService := services.NewOrderService(repo)
 	userSrevice := services.NewUserService(repo)
+	
 	// routes
 	routes.RegisterRoute(
 		r, // passed gin Engine

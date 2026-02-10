@@ -47,9 +47,10 @@ func RegisterRoute(
 		user.POST("/cart/items", cartController.AddToCart)// completed -> checked 
 		user.PUT("/cart/item/:id", cartController.UpdateItem)
 		user.DELETE("/cart/items/:id", cartController.RemoveItem)// completed -> checked 
-		user.POST("/orders", orderController.CreateOrder)
-		user.GET("/orders", orderController.GetOrders)
-		user.GET("orders/:id", orderController.GetOrderByID)
+		user.POST("/orders", orderController.CreateOrder)// completed -> checked 
+		user.GET("/orders", orderController.GetOrders)// completed -> checked 
+		user.GET("orders/:id", orderController.GetOrderByID)// completed -> checked 
+				// adding payments last
 	}
 
 	// admin routes

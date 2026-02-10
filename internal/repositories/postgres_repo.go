@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	// "github.com/mohmdsaalim/ecommerce-Gin/internal/models"
 	"github.com/mohmdsaalim/ecommerce-Gin/pkg/database"
 	"gorm.io/gorm"
 )
@@ -41,26 +40,6 @@ func (r *PgSQLRepository) FindOne(dest interface{}, query string, preloads []str
 	db := r.db; if query != "" { db = db.Where(query, args...) }; for _, p := range preloads { db = db.Preload(p) }; return db.First(dest).Error
 }
 
-
-// func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, preloads []string, args ...interface{}) error {
-// 	db := r.db
-// 	if query != "" { db = db.Where(query, args...) }
-// 	if order != "" { db = db.Order(order) }
-// 	for _, preload := range preloads { db = db.Preload(preload) }
-// 	return db.Find(dest).Error
-// }
-
-
-
-// func (r *PgSQLRepository) Find(dest interface{}, query string, args ...interface{}) error {
-// 	db := r.db
-
-// 	if query != "" {
-// 		db = db.Where(query, args...)
-// 	}
-
-// 	return db.Find(dest).Error
-// }
 func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, preloads []string, args ...interface{}) error {
 	db := r.db
 	if query != "" { db = db.Where(query, args...) }
