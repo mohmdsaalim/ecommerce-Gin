@@ -7,6 +7,7 @@ import (
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/repositories"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/routes"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/services"
+	"github.com/mohmdsaalim/ecommerce-Gin/pkg/database"
 )
 
 func RegisterDependencies(r *gin.Engine) {
@@ -15,12 +16,12 @@ func RegisterDependencies(r *gin.Engine) {
 	repo := repositories.NewPgSQLRepository()
 
 	// services
-	authService := services.NewAuthService(repo)
+	authService := services.NewAuthService(repo, database.RedisClient)
 	productService := services.NewProductService(repo)
 	cartService := services.NewCartService(repo)
 	orderService := services.NewOrderService(repo)
 	userSrevice := services.NewUserService(repo)
-	
+
 	// routes
 	routes.RegisterRoute(
 		r, // passed gin Engine

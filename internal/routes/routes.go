@@ -22,6 +22,7 @@ func RegisterRoute(
 	cartController := controllers.NewCartController(cartService)
 	orderController := controllers.NewOrderController(orderService)
 	userController := controllers.NewUserController(userSrevice)
+	
 	// checking route
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status":"OK"})
@@ -31,6 +32,8 @@ func RegisterRoute(
 	auth := r.Group("/")
 	{
 		auth.POST("/auth/register", authController.Register) // completed -> checked
+		auth.GET("/request-email-otp/:userId", )  // send OTP
+		auth.POST("/verify-email-otp/:userId", )   // verify OTP
 		auth.POST("/auth/login", authController.Login) // completed -> checked
 		auth.GET("/products", productController.GetProducts)// completed -> checked
 		auth.GET("/products/:id",productController.GetProductByID )// completed -> checked 

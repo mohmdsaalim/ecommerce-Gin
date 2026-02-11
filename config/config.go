@@ -30,6 +30,13 @@ type Config struct {
 		Password string `yaml:"password"`
 		DB       int    `yaml:"db"`
 	} `yaml:"redis"`
+
+	SMTP struct {
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		Email    string `yaml:"email"`
+		Password string `yaml:"password"`
+	} `yaml:"smtp"`
 }
 
 var AppConfig *Config // globally accessable

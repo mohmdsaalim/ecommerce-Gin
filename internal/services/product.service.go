@@ -15,46 +15,7 @@ func NewProductService(repo repositories.Repository) *ProductService {
 	}
 }
 
-
-// GetAllProduct - returns all active products
-// func (s *ProductService) GetAllProducts(category, subCategory string) ([]models.Product, error) {
-
-// 	var products []models.Product
-// 	var query string
-// 	var args []interface{}
-
-// 	switch {
-// 	// Both category and subcategory
-// 	case category != "" && subCategory != "":
-// 		query = "category = ? AND sub_category = ? AND is_active = ?"
-// 		args = []interface{}{category, subCategory, true}
-
-// 	// Only category
-// 	case category != "":
-// 		query = "category = ? AND is_active = ?"
-// 		args = []interface{}{category, true}
-
-// 	//  filter
-// 	case subCategory != "":
-// 		query = "sub_category = ? AND is_active = ?"
-// 		args = []interface{}{subCategory, true}
-// 	default:
-// 		query = "is_active = ?"
-// 		args = []interface{}{true}
-// 	}
-
-// 	err := s.repo.FindAll(
-// 		&products,
-// 		query,
-// 		"created_at DESC",
-// 		[]string{"Variants"},
-// 		args...,
-// 	)
-
-// 	return products, err
-// }
-
-
+// is in carted set when the item is in cart
 func (s *ProductService) GetAllProducts(category, subCategory, search string) ([]models.Product, error) {
 
 	var products []models.Product
@@ -114,10 +75,6 @@ func (s *ProductService) GetAllProducts(category, subCategory, search string) ([
 
 	return products, err
 }
-
-
-
-
 
 
 
