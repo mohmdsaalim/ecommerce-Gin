@@ -46,3 +46,54 @@ func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, 
 	for _, p := range preloads { db = db.Preload(p) }
 	return db.Find(dest).Error
 }
+
+func (r *PgSQLRepository) Count(model interface{}, query string, args ...interface{}) (int64, error) {
+	var count int64
+	db := r.db.Model(model)
+	if query != "" { db = db.Where(query, args...) }
+	err := db.Count(&count).Error
+	return count, err
+}
+
+func (r *PgSQLRepository) Sum(model interface{}, column string, query string, args ...interface{}) (float64, error) {
+	var total float64
+
+	db := r.db.Model(model)
+
+	if query != "" {
+		db = db.Where(query, args...)
+	}
+
+	err := db.Select("COALESCE(SUM(" + column + "),0)").Scan(&total).Error
+	return total, err
+}
+
+func (r *PgSQLRepository) FindWithLimit(
+	dest interface{},
+	query string,
+	order string,
+	limit int,
+	preloads []string,
+	args ...interface{},
+) error {
+
+	db := r.db
+
+	if query != "" {
+		db = db.Where(query, args...)
+	}
+
+	if order != "" {
+		db = db.Order(order)
+	}
+
+	if limit > 0 {
+		db = db.Limit(limit)
+	}
+
+	for _, p := range preloads {
+		db = db.Preload(p)
+	}
+
+	return db.Find(dest).Error
+}

@@ -21,6 +21,10 @@ func RegisterDependencies(r *gin.Engine) {
 	cartService := services.NewCartService(repo)
 	orderService := services.NewOrderService(repo)
 	userSrevice := services.NewUserService(repo)
+	adminService := services.NewAdminService(repo)
+	adminProductService := services.NewAdminProductService(repo)
+	adminUserService := services.NewAdminUserService(repo)
+	adminOrderService := services.NewAdminOrderService(repo)
 
 	// routes
 	routes.RegisterRoute(
@@ -30,5 +34,9 @@ func RegisterDependencies(r *gin.Engine) {
 		cartService,// cart service
 		orderService, // orderservice
 		userSrevice,
+		adminService,
+		adminProductService,
+		adminUserService,
+		adminOrderService,
 		)
 }
