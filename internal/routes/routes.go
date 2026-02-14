@@ -37,12 +37,12 @@ func RegisterRoute(
 	// PUBLIC routes
 	auth := r.Group("/")
 	{
-		auth.POST("/auth/register", authController.Register)        // completed -> checked
-		auth.GET("/request-email-otp/:userId")                      // send OTP
-		auth.POST("/verify-email-otp/:userId")                      // verify OTP
-		auth.POST("/auth/login", authController.Login)              // completed -> checked
-		auth.GET("/products", productController.GetProducts)        // completed -> checked
-		auth.GET("/products/:id", productController.GetProductByID) // completed -> checked
+		auth.POST("/auth/register", authController.Register)                   // completed -> checked
+		auth.GET("/request-email-otp/:userId", authController.RequestEmailOTP) // send OTP
+		auth.POST("/verify-email-otp/:userId", authController.VerifyEmailOTP)  // verify OTP
+		auth.POST("/auth/login", authController.Login)                         // completed -> checked
+		auth.GET("/products", productController.GetProducts)                   // completed -> checked
+		auth.GET("/products/:id", productController.GetProductByID)            // completed -> checked
 	}
 
 	// User routes
@@ -70,28 +70,27 @@ func RegisterRoute(
 	)
 	{
 		// admin dashboard
-		admin.GET("/dashboard", adminController.GetDashboard)
+		admin.GET("/dashboard", adminController.GetDashboard) // completed -> checked
 
 		// admin prodcts page
 		admin.POST("/products", adminProductController.CreateProduct)
-		admin.GET("/products", adminProductController.GetAllProducts)
-		admin.GET("/products/:id", adminProductController.GetProductByID)
+		admin.GET("/products", adminProductController.GetAllProducts)     // completed -> checked
+		admin.GET("/products/:id", adminProductController.GetProductByID) // completed -> checked
 		admin.PUT("/products/:id", adminProductController.UpdateProduct)
-		admin.DELETE("/products/:id", adminProductController.DeleteProduct)
+		admin.DELETE("/products/:id", adminProductController.DeleteProduct) // completed -> checked
 		admin.PUT("/variants/:variantId/stock", adminProductController.UpdateStock)
 
 		// admin user cntrls
-		admin.GET("/users", adminUserController.GetAllUsers)
-		admin.GET("/users/:id", adminUserController.GetUser)
+		admin.GET("/users", adminUserController.GetAllUsers) // completed -> checked
+		admin.GET("/users/:id", adminUserController.GetUser) // completed -> checked
 		admin.PUT("/users/:id/deactivate", adminUserController.DeactivateUser)
 		admin.PUT("/users/:id/activate", adminUserController.ActivateUser)
 		admin.PUT("/users/:id/role", adminUserController.ChangeRole)
 		admin.DELETE("/users/:id", adminUserController.DeleteUser)
 
-
 		// admin orders
-		admin.GET("/orders", adminOrderController.GetAllOrders)
-		admin.GET("/orders/:id", adminOrderController.GetOrder)
+		admin.GET("/orders", adminOrderController.GetAllOrders) // completed -> checked
+		admin.GET("/orders/:id", adminOrderController.GetOrder) // completed -> checked
 		admin.PUT("/orders/:id/status", adminOrderController.UpdateStatus)
 		admin.DELETE("/orders/:id", adminOrderController.DeleteOrder)
 	}
