@@ -15,6 +15,7 @@ func NewAdminController(service *services.AdminService) *AdminController {
 	return &AdminController{service: service}
 }
 
+// get admin dashboard
 func (c *AdminController) GetDashboard(ctx *gin.Context) {
 
 	dashboard, err := c.service.GetDashboard()
