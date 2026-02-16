@@ -29,7 +29,24 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 	subCategory := c.Query("sub_category")
 	search := c.Query("search")
 
-	products, err := pc.service.GetAllProducts(category, subCategory, search)
+	// Get pagination parameters from query
+	// Default: page = 1, limit = 10
+	pageStr := c.DefaultQuery("page", "1")
+	limitStr := c.DefaultQuery("limit", "10")
+
+	// Convert string to integer
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page <= 0 {
+		page = 1 // default to first page if invalid
+	}
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10 // default to 10 items if invalid
+	}
+
+	// Call the service with pagination data
+	products, err := pc.service.GetAllProducts(category, subCategory, search, page, limit)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return

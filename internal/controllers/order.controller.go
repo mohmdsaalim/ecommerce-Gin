@@ -31,11 +31,29 @@ func (c *OrderController) CreateOrder(ctx *gin.Context) {
 }
 
 // Getorders
+// GetOrders
 func (c *OrderController) GetOrders(ctx *gin.Context) {
 
 	userID := ctx.GetUint("userID")
 
-	orders, err := c.service.GetOrders(userID)
+	// Read pagination params from URL: /orders?page=1&limit=10
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+
+	// Convert page to number
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page <= 0 {
+		page = 1
+	}
+
+	// Convert limit to number
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10
+	}
+
+	// Fetch orders from service with pagination
+	orders, err := c.service.GetOrders(userID, page, limit)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -43,7 +61,6 @@ func (c *OrderController) GetOrders(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, orders)
 }
-
 
 func (c *OrderController) GetOrderByID(ctx *gin.Context) {
 

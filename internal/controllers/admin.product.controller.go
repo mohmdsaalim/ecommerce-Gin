@@ -50,7 +50,24 @@ func (c *AdminProductController) GetProductByID(ctx *gin.Context) {
 
 func (c *AdminProductController) GetAllProducts(ctx *gin.Context) {
 
-	products, err := c.service.GetAllProducts()
+	// Read pagination params from URL: /admin/products?page=1&limit=10
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+
+	// Convert page to number
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page <= 0 {
+		page = 1
+	}
+
+	// Convert limit to number
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10
+	}
+
+	// Fetch products from service with pagination
+	products, err := c.service.GetAllProducts(page, limit)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -70,7 +87,36 @@ func (c *AdminProductController) UpdateProduct(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.UpdateProduct(uint(id), data); err != nil {
+	// 🛡️ SECURITY: Whitelist only allowed fields to update
+	allowedFields := map[string]bool{
+		"name":         true,
+		"description":  true,
+		"base_price":   true,
+		"category":     true,
+		"sub_category": true,
+		"image_url":    true,
+		"is_active":    true,
+	}
+
+	filteredData := make(map[string]interface{})
+	for key, value := range data {
+		if allowedFields[key] {
+			// Fix: The frontend sends "image_url", but the database column is "primary_image".
+			// We map it here to avoid the "column image_url does not exist" error.
+			if key == "image_url" {
+				filteredData["primary_image"] = value
+			} else {
+				filteredData[key] = value
+			}
+		}
+	}
+
+	if len(filteredData) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "no valid fields to update"})
+		return
+	}
+
+	if err := c.service.UpdateProduct(uint(id), filteredData); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

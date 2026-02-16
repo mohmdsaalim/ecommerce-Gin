@@ -18,7 +18,24 @@ func NewAdminUserController(service *services.AdminUserService) *AdminUserContro
 
 func (c *AdminUserController) GetAllUsers(ctx *gin.Context) {
 
-	users, err := c.service.GetAllUsers()
+	// Read pagination params from URL: /admin/users?page=1&limit=10
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+
+	// Convert page to number
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page <= 0 {
+		page = 1
+	}
+
+	// Convert limit to number
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10
+	}
+
+	// Fetch users from service
+	users, err := c.service.GetAllUsers(page, limit)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -66,7 +83,6 @@ func (c *AdminUserController) ActivateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "user activated"})
 }
 
-
 type ChangeRoleRequest struct {
 	Role string `json:"role" binding:"required"`
 }
@@ -89,7 +105,6 @@ func (c *AdminUserController) ChangeRole(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "role updated"})
 }
-
 
 func (c *AdminUserController) DeleteUser(ctx *gin.Context) {
 

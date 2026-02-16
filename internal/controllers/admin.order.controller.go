@@ -18,7 +18,24 @@ func NewAdminOrderController(service *services.AdminOrderService) *AdminOrderCon
 
 func (c *AdminOrderController) GetAllOrders(ctx *gin.Context) {
 
-	orders, err := c.service.GetAllOrders()
+	// Read pagination params from URL: /admin/orders?page=1&limit=10
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+
+	// Convert page to number
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page <= 0 {
+		page = 1
+	}
+
+	// Convert limit to number
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10
+	}
+
+	// Fetch orders from service with pagination
+	orders, err := c.service.GetAllOrders(page, limit)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -62,7 +79,6 @@ func (c *AdminOrderController) UpdateStatus(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "order status updated"})
 }
-
 
 func (c *AdminOrderController) DeleteOrder(ctx *gin.Context) {
 

@@ -15,14 +15,23 @@ func NewAdminOrderService(repo repositories.Repository) *AdminOrderService {
 	return &AdminOrderService{repo: repo}
 }
 
-func (s *AdminOrderService) GetAllOrders() ([]models.Order, error) {
+// GetAllOrders retrieves all orders with pagination for the admin panel
+func (s *AdminOrderService) GetAllOrders(page, limit int) ([]models.Order, error) {
 
 	var orders []models.Order
 
-	err := s.repo.FindAll(
+	// Calculate offset for pagination
+	// page 1 -> offset 0
+	// page 2 -> offset limit
+	offset := (page - 1) * limit
+
+	// Fetch orders using pagination
+	err := s.repo.FindWithPagination(
 		&orders,
-		"",
-		"created_at DESC",
+		"",                // no specific filter query
+		"created_at DESC", // show newest orders first
+		limit,
+		offset,
 		[]string{
 			"User",
 			"OrderItems",
@@ -33,7 +42,6 @@ func (s *AdminOrderService) GetAllOrders() ([]models.Order, error) {
 
 	return orders, err
 }
-
 
 func (s *AdminOrderService) GetOrderByID(id uint) (*models.Order, error) {
 
@@ -58,8 +66,6 @@ func (s *AdminOrderService) GetOrderByID(id uint) (*models.Order, error) {
 	return &order, nil
 }
 
-
-
 func (s *AdminOrderService) UpdateStatus(id uint, status string) error {
 
 	validStatuses := map[string]bool{
@@ -82,7 +88,6 @@ func (s *AdminOrderService) UpdateStatus(id uint, status string) error {
 		},
 	)
 }
-
 
 func (s *AdminOrderService) DeleteOrder(id uint) error {
 

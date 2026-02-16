@@ -15,15 +15,24 @@ func NewAdminUserService(repo repositories.Repository) *AdminUserService {
 	return &AdminUserService{repo: repo}
 }
 
-func (s *AdminUserService) GetAllUsers() ([]models.User, error) {
+// GetAllUsers retrieves all users with pagination for the admin panel
+func (s *AdminUserService) GetAllUsers(page, limit int) ([]models.User, error) {
 
 	var users []models.User
 
-	err := s.repo.FindAll(
+	// Calculate offset for pagination
+	// page 1 -> offset 0
+	// page 2 -> offset limit
+	offset := (page - 1) * limit
+
+	// Fetch users using pagination
+	err := s.repo.FindWithPagination(
 		&users,
-		"",
-		"created_at DESC",
-		[]string{},
+		"",                // no specific filter query
+		"created_at DESC", // show newest users first
+		limit,
+		offset,
+		[]string{}, // no preloads needed for simple user list
 	)
 
 	return users, err
@@ -51,7 +60,6 @@ func (s *AdminUserService) DeactivateUser(id uint) error {
 		},
 	)
 }
-
 
 func (s *AdminUserService) ActivateUser(id uint) error {
 

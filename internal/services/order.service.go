@@ -15,7 +15,6 @@ func NewOrderService(repo repositories.Repository) *OrderService {
 	return &OrderService{repo: repo}
 }
 
-
 func (s *OrderService) CreateOrder(userID uint) (*models.Order, error) {
 
 	var cart models.Cart
@@ -70,24 +69,32 @@ func (s *OrderService) CreateOrder(userID uint) (*models.Order, error) {
 	return &order, nil
 }
 
-
 // get orders
-func (s *OrderService) GetOrders(userID uint) ([]models.Order, error) {
+// GetOrders retrieves a user's orders with pagination
+func (s *OrderService) GetOrders(userID uint, page, limit int) ([]models.Order, error) {
 	var orders []models.Order
 
-	err := s.repo.FindAll(
+	// Calculate offset for pagination
+	// page 1 -> offset 0
+	// page 2 -> offset limit
+	offset := (page - 1) * limit
+
+	// Fetch orders using pagination
+	err := s.repo.FindWithPagination(
 		&orders,
-		"user_id = ?","",
+		"user_id = ?",
+		"created_at DESC", // Show latest orders first
+		limit,
+		offset,
 		[]string{
-	"OrderItems",
-	"OrderItems.Product",
-	"OrderItems.Variant",
-},
+			"OrderItems",
+			"OrderItems.Product",
+			"OrderItems.Variant",
+		},
 		userID,
 	)
 	return orders, err
 }
-
 
 func (s *OrderService) GetOrderByID(userID, orderID uint) (*models.Order, error) {
 	var order models.Order

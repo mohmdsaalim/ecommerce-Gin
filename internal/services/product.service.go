@@ -16,14 +16,15 @@ func NewProductService(repo repositories.Repository) *ProductService {
 }
 
 // is in carted set when the item is in cart
-func (s *ProductService) GetAllProducts(category, subCategory, search string) ([]models.Product, error) {
+// GetAllProducts retrieves products with filtering and pagination
+func (s *ProductService) GetAllProducts(category, subCategory, search string, page, limit int) ([]models.Product, error) {
 
 	var products []models.Product
 	var query string
 	var args []interface{}
 
+	// Basic filtering logic
 	switch {
-
 	// Category + SubCategory + Search
 	case category != "" && subCategory != "" && search != "":
 		query = "category = ? AND sub_category = ? AND LOWER(name) LIKE LOWER(?) AND is_active = ?"
@@ -65,10 +66,18 @@ func (s *ProductService) GetAllProducts(category, subCategory, search string) ([
 		args = []interface{}{true}
 	}
 
-	err := s.repo.FindAll(
+	// Calculate offset: how many items to skip
+	// If page is 1 and limit is 10, offset is (1-1)*10 = 0
+	// If page is 2 and limit is 10, offset is (2-1)*10 = 1 skip 10
+	offset := (page - 1) * limit
+
+	// Use our new FindWithPagination repository method
+	err := s.repo.FindWithPagination(
 		&products,
 		query,
 		"created_at DESC",
+		limit,
+		offset,
 		[]string{"Variants"},
 		args...,
 	)
@@ -76,15 +85,13 @@ func (s *ProductService) GetAllProducts(category, subCategory, search string) ([
 	return products, err
 }
 
-
-
 func (s *ProductService) GetProductByID(id uint) (*models.Product, error) {
 
 	var product models.Product
 
 	err := s.repo.FindOne(
 		&product,
-		"id = ? AND is_active = ?",nil,
+		"id = ? AND is_active = ?", nil,
 		id,
 		true,
 	)

@@ -24,26 +24,28 @@ func (s *AdminProductService) CreateProduct(product *models.Product) error {
 	return s.repo.Insert(product)
 }
 
-
-
-
-
-func (s *AdminProductService) GetAllProducts() ([]models.Product, error) {
+// GetAllProducts retrieves all products with pagination for the admin panel
+func (s *AdminProductService) GetAllProducts(page, limit int) ([]models.Product, error) {
 
 	var products []models.Product
 
-	err := s.repo.FindAll(
+	// Calculate offset for pagination
+	// page 1 -> offset 0
+	// page 2 -> offset limit
+	offset := (page - 1) * limit
+
+	// Fetch products using pagination
+	err := s.repo.FindWithPagination(
 		&products,
-		"",
-		"created_at DESC",
+		"",                // no specific filter query
+		"created_at DESC", // show newest products first
+		limit,
+		offset,
 		[]string{"Variants"},
 	)
 
 	return products, err
 }
-
-
-
 
 func (s *AdminProductService) GetProductByID(id uint) (*models.Product, error) {
 
@@ -63,22 +65,13 @@ func (s *AdminProductService) GetProductByID(id uint) (*models.Product, error) {
 	return &product, nil
 }
 
-
-
-
-
-
 func (s *AdminProductService) UpdateProduct(id uint, data map[string]interface{}) error {
 	return s.repo.UpdateFields(&models.Product{}, id, data)
 }
 
-
-
 func (s *AdminProductService) DeleteProduct(id uint) error {
 	return s.repo.Delete(&models.Product{}, "id = ?", id)
 }
-
-
 
 func (s *AdminProductService) UpdateStock(variantID uint, stock int) error {
 
