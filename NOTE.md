@@ -423,3 +423,50 @@ func (ctrl *ProductController) CheckProductAvailability(c *gin.Context) {
 		"quantity":   quantity,
 	})
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reddis 
+
+Redis is an in-memory database.
+	•	Data is stored in RAM
+	•	Not directly on hard disk (like PostgreSQL or MySQL)
+	•	That’s why it’s extremely fast ⚡
+	•	Both RDB -> Snapshoting  + AOF -> 
+I’ve used Redis primarily for OTP storage, but in real-world systems Redis is commonly used for caching database queries, session management, rate limiting, distributed locking, real-time counters, leaderboards using sorted sets, and as a lightweight message broker using Pub/Sub or Streams.
+
+Rate limitng
+
+Controlling how many requests a user/client can make within a specific time period.
+1️⃣ Prevent Brute Force Attacks
+
+Example:
+	•	Someone trying 1000 passwords
+	•	Someone trying multiple OTP guesses
+
+⸻
+
+2️⃣ Protect Server Resources
+
+Without rate limit:
+	•	One user can overload your API
+	•	Can cause server crash
+
+⸻
+
+3️⃣ Prevent Abuse
+
+Example:
+	•	Spamming comments
+	•	Spamming OTP requests
+	•	Scraping data

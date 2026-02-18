@@ -76,6 +76,7 @@ database.DeleteOTP(key)
 
 ---
 
+
 ### 3. **internal/controllers/auth.controller.go** ✅
    - Added comments in `RequestEmailOTP()` controller
    - Added comments in `VerifyEmailOTP()` controller
@@ -260,7 +261,7 @@ err = database.SetOTP(key, otp, 5*time.Minute)
 - ✅ **All code has beginner-friendly comments**
 - ✅ **Complete documentation provided**
 
----
+-------------------------------------------------------------------------------------------------------------------------
 
 ## Questions?
 

@@ -20,19 +20,19 @@ import (
 func main() {
 
 	// Load Config
-	config.LoadConfig()
+	config.LoadConfig() 
 
 	// Connect Databases
 	database.ConnectRedis()
 	database.ConnectPostgres()
 
 	// Create Gin Engine
-	r := gin.Default()
+	r := gin.Default() 
 
 	// Register routes & dependencies
 	app.RegisterDependencies(r)
 
-	// Start background worker
+	// Start background worker //. need to set wait grp in here 
 	go workers.StartOTPWorker()
 
 	port := config.AppConfig.App.Port
