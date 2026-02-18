@@ -9,17 +9,17 @@ type PgSQLRepository struct {
 	db *gorm.DB
 }
 
-// gorm connection
+// gorm connection 01
 func NewPgSQLRepository() Repository {
 	return &PgSQLRepository{
 		db: database.DB,
 	}
 }
-
+// 01
 func (r *PgSQLRepository) Insert(data interface{}) error {
 	return r.db.Debug().Create(data).Error // creating data add data into db ✅
 }
-
+//02
 func (r *PgSQLRepository) FindByID(model interface{}, id interface{}) error {
 	return r.db.First(model, id).Error
 } // take one specific data user1 or user2  ✅
@@ -27,6 +27,7 @@ func (r *PgSQLRepository) FindByID(model interface{}, id interface{}) error {
 //	func (r *PgSQLRepository) UpdateByID(model interface{}, id interface{}, data interface{}) error {
 //		return r.db.Model(model).Where("id = ?", id).Updates(data).Error
 //	}
+// 3
 func (r *PgSQLRepository) UpdateByID(model interface{}, id interface{}, data interface{}) error {
 	return r.db.
 		Model(model).
@@ -34,15 +35,15 @@ func (r *PgSQLRepository) UpdateByID(model interface{}, id interface{}, data int
 		Omit("Variants").
 		Updates(data).Error
 }
-
+// 4
 func (r *PgSQLRepository) UpdateFields(model interface{}, id interface{}, fields map[string]interface{}) error {
 	return r.db.Model(model).Where("id = ?", id).Updates(fields).Error
 }
-
+// 5
 func (r *PgSQLRepository) Delete(model interface{}, query string, args ...interface{}) error {
 	return r.db.Where(query, args...).Delete(model).Error
 }
-
+// 6
 func (r *PgSQLRepository) FindOne(dest interface{}, query string, preloads []string, args ...interface{}) error {
 	db := r.db
 	if query != "" {
@@ -53,7 +54,7 @@ func (r *PgSQLRepository) FindOne(dest interface{}, query string, preloads []str
 	}
 	return db.First(dest).Error
 } //
-
+// 7
 func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, preloads []string, args ...interface{}) error {
 	db := r.db
 	if query != "" {
@@ -67,7 +68,7 @@ func (r *PgSQLRepository) FindAll(dest interface{}, query string, order string, 
 	}
 	return db.Find(dest).Error
 }
-
+// 08
 // FindWithPagination retrieves data with both limit and offset (for pages)
 func (r *PgSQLRepository) FindWithPagination(
 	dest interface{},
@@ -108,7 +109,7 @@ func (r *PgSQLRepository) FindWithPagination(
 	// execute the query
 	return db.Find(dest).Error
 }
-
+//9
 func (r *PgSQLRepository) Count(model interface{}, query string, args ...interface{}) (int64, error) {
 	var count int64
 	db := r.db.Model(model)
@@ -118,7 +119,7 @@ func (r *PgSQLRepository) Count(model interface{}, query string, args ...interfa
 	err := db.Count(&count).Error
 	return count, err
 }
-
+// 10
 func (r *PgSQLRepository) Sum(model interface{}, column string, query string, args ...interface{}) (float64, error) {
 	var total float64
 
@@ -132,6 +133,7 @@ func (r *PgSQLRepository) Sum(model interface{}, column string, query string, ar
 	return total, err
 }
 
+// 11
 func (r *PgSQLRepository) FindWithLimit(
 	dest interface{},
 	query string,

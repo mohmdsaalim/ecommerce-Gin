@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/models"
 	"github.com/mohmdsaalim/ecommerce-Gin/internal/services"
+	"github.com/mohmdsaalim/ecommerce-Gin/internal/utils"
+	
 )
 
 // this is jst typ no data-here
@@ -23,10 +25,9 @@ func NewAuthController(authService *services.AuthService) *AuthController {
 
 // Register func
 func (a *AuthController) Register(c *gin.Context) {
-	var req models.RegisterRequest // <- from user models
-	// json -> struct
+	var req models.RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid request data", err.Error())
 		return
 	}
 
@@ -36,31 +37,30 @@ func (a *AuthController) Register(c *gin.Context) {
 		req.Password,
 	)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Registration failed", err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "user registered successfully"})
+	utils.SuccessResponse(c, http.StatusCreated, "User registered successfully", nil)
 }
 
 // Login function _ controller
 func (a *AuthController) Login(c *gin.Context) {
-
-	var req models.LoginRequest // <- from models
+	var req models.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error(),
-			"code":   401,
-			"status": false, // need to set everywhere
-		})
-
+		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid login credentials", err.Error())
 		return
 	}
 
-	token, err := a.authService.Login(req.Email, req.Password)
+	tokens, err := a.authService.Login(req.Email, req.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, http.StatusUnauthorized, "Login failed", err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"token": token})
+
+	utils.SuccessResponse(c, http.StatusOK, "Login successful", gin.H{
+		"access_token":  tokens.AccessToken,
+		"refresh_token": tokens.RefreshToken,
+	})
 }
 
 // salman review
@@ -74,28 +74,21 @@ func (a *AuthController) Login(c *gin.Context) {
 // 2. Calls service to generate OTP and store in Redis for 5 minutes
 // 3. Sends OTP to user's email
 func (a *AuthController) RequestEmailOTP(c *gin.Context) {
-	// Step 1: Get userId from URL parameter (example: /request-email-otp/123)
 	userIDParam := c.Param("userId")
 
-	// Step 2: Convert userId from string to number
 	userID, err := strconv.ParseUint(userIDParam, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid user ID", "The provided user ID is not a valid number")
 		return
 	}
 
-	// Step 3: Call service to:
-	// - Generate 6-digit OTP
-	// - Store OTP in Redis with 5-minute expiration
-	// - Send OTP to user's email
 	err = a.authService.SendEmailOTP(uint(userID))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, http.StatusBadRequest, "Failed to send OTP", err.Error())
 		return
 	}
 
-	// Step 4: Return success response
-	c.JSON(http.StatusOK, gin.H{"message": "OTP sent successfully"})
+	utils.SuccessResponse(c, http.StatusOK, "OTP sent successfully", nil)
 }
 
 // VerifyEmailOTP handles OTP verification from user input
@@ -107,39 +100,48 @@ func (a *AuthController) RequestEmailOTP(c *gin.Context) {
 // 3. Calls service to verify OTP from Redis
 // 4. If OTP matches, sets User.EmailVerified = true
 func (a *AuthController) VerifyEmailOTP(c *gin.Context) {
-	// Step 1: Get userId from URL parameter (example: /verify-email-otp/123)
 	userIDParam := c.Param("userId")
 
-	// Step 2: Convert userId from string to number
 	userID, err := strconv.ParseUint(userIDParam, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid user ID", "The provided user ID is not a valid number")
 		return
 	}
 
-	// Step 3: Define structure to receive OTP from request body
-	// Request body format: {"otp": "123456"}
 	var req struct {
-		OTP string `json:"otp" binding:"required"` // OTP is required field
+		OTP string `json:"otp" binding:"required"`
 	}
 
-	// Step 4: Parse JSON request body and bind to struct
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, http.StatusBadRequest, "OTP is required", err.Error())
 		return
 	}
 
-	// Step 5: Call service to:
-	// - Get OTP from Redis using user's email
-	// - Compare Redis OTP with user's input (req.OTP)
-	// - If they match, set User.EmailVerified = true in database
-	// - Delete OTP from Redis after verification
 	err = a.authService.VerifyEmailOTP(uint(userID), req.OTP)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, http.StatusBadRequest, "Verification failed", err.Error())
 		return
 	}
 
-	// Step 6: Return success response - User is now verified!
-	c.JSON(http.StatusOK, gin.H{"message": "Email verified successfully"})
+	utils.SuccessResponse(c, http.StatusOK, "Email verified successfully", nil)
+}
+
+// RefreshToken function for refreshing access token
+func (a *AuthController) RefreshToken(c *gin.Context) {
+	var req models.RefreshTokenRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "Refresh token is required", err.Error())
+		return
+	}
+
+	tokens, err := a.authService.RefreshToken(req.RefreshToken)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, "Invalid refresh token", err.Error())
+		return
+	}
+
+	utils.SuccessResponse(c, http.StatusOK, "Token refreshed successfully", gin.H{
+		"access_token":  tokens.AccessToken,
+		"refresh_token": tokens.RefreshToken,
+	})
 }

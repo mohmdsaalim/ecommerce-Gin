@@ -41,8 +41,10 @@ func RegisterRoute(
 		auth.GET("/request-email-otp/:userId", authController.RequestEmailOTP) // send OTP
 		auth.POST("/verify-email-otp/:userId", authController.VerifyEmailOTP)  // verify OTP
 		auth.POST("/auth/login", authController.Login)                         // completed -> checked
+		auth.POST("/auth/refresh-token", authController.RefreshToken)          // refresh token
 		auth.GET("/products", productController.GetProducts)                   // completed -> checked
-		auth.GET("/products/:id", productController.GetProductByID)            // completed -> checked
+
+		auth.GET("/products/:id", productController.GetProductByID) // completed -> checked
 	}
 
 	// User routes

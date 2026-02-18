@@ -26,7 +26,7 @@ type Product struct {
 	
 	Variants    []ProductVariant `gorm:"foreignKey:ProductID" json:"variants,omitempty"`
 }
-
+// product analys ///////
 type ProductVariant struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
 	ProductID uint      `gorm:"not null;index" json:"product_id"`

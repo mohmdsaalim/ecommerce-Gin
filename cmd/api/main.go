@@ -71,6 +71,9 @@ func main() {
 	log.Println("✅ Server exited properly")
 }
 
+// status return 
+
+// { user, auth }, proper responce handling complete query 
 
 
 // pending ....

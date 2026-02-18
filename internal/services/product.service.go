@@ -15,6 +15,24 @@ func NewProductService(repo repositories.Repository) *ProductService {
 	}
 }
 
+// type Product struct {
+// 	ID          uint           `gorm:"primaryKey" json:"id"`
+// 	Name        string         `gorm:"not null;size:255" json:"name"`
+// 	Description string         `gorm:"type:text" json:"description"`
+// 	Category    string         `gorm:"not null;size:50;index" json:"category"`
+// 	SubCategory string         `gorm:"size:50;index" json:"sub_category"`
+// 	BasePrice   float64        `gorm:"not null;type:decimal(10,2)" json:"base_price"`
+// 	SKU         string         `gorm:"unique;size:100" json:"sku"`
+// 	Season      string         `gorm:"size:20" json:"season"`
+	
+// 	PrimaryImage   string      `gorm:"size:500" json:"primary_image"`
+// 	SecondaryImage string      `gorm:"size:500" json:"secondary_image"`
+// 	ThumbnailImage string      `gorm:"size:500" json:"thumbnail_image"`
+// 	IsCarted		
+	
+	
+// 	// Variants    []ProductVariant `gorm:"foreignKey:ProductID" json:"variants,omitempty"`
+// }
 // is in carted set when the item is in cart
 // GetAllProducts retrieves products with filtering and pagination
 func (s *ProductService) GetAllProducts(category, subCategory, search string, page, limit int) ([]models.Product, error) {
@@ -102,3 +120,6 @@ func (s *ProductService) GetProductByID(id uint) (*models.Product, error) {
 
 	return &product, nil
 }
+
+
+// already in cart  (is carted)

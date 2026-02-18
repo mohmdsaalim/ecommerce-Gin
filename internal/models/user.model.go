@@ -8,11 +8,18 @@ type RegisterRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 }
+
 // LoginRequest Model -> authController
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
+
+// RefreshTokenRequest Model -> authController
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 // user model -> db
 type User struct {
 	gorm.Model
@@ -21,33 +28,13 @@ type User struct {
 	Username      string `gorm:"size:255;not null"`
 	Role          string `gorm:"size:100;not null"`
 	Status        string `gorm:"size:50;default:active"`
-	EmailVerified bool `gorm:"default:false" json:"email_verified"`
+	EmailVerified bool   `gorm:"default:false" json:"email_verified"`
 
-	Cart          *Cart   `gorm:"foreignKey:UserID" json:"cart,omitempty"`
+	Cart      *Cart     `gorm:"foreignKey:UserID" json:"cart,omitempty"`
 	Addresses []Address `gorm:"foreignKey:UserID" json:"addresses,omitempty"`
 }
-// after before -> inside user 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// after before -> inside user
 
 // type Address struct {
 // 	gorm.Model

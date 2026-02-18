@@ -76,26 +76,72 @@ func (s *AuthService) Register(username, email, password string) error {
 
 // validation
 
-func (s *AuthService) Login(email, password string) (string, error) {
+func (s *AuthService) Login(email, password string) (*utils.TokenDetails, error) {
 	var user models.User
 
 	//  Fetch user by email
 	if err := s.repo.FindOne(&user, "email = ?", nil, email); err != nil {
-		return "", errors.New("invalid Email")
+		return nil, errors.New("invalid email or password")
 	}
 
 	// Check password
 	if !utils.Checkpassword(user.PasswordHash, password) {
-		return "", errors.New("invalid Password")
+		return nil, errors.New("invalid email or password")
 	}
 
-	//  Generate JWT
-	token, err := utils.GenerateToken(user.ID, user.Role)
+	//  Generate Access Token
+	accessToken, err := utils.GenerateToken(user.ID, user.Role)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	// Generate Refresh Token
+	refreshToken, err := utils.GenerateRefreshToken(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &utils.TokenDetails{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}
+
+// RefreshToken validates a refresh token and generates a new access token
+func (s *AuthService) RefreshToken(refreshToken string) (*utils.TokenDetails, error) {
+	claims, err := utils.ValidateToken(refreshToken)
+	if err != nil {
+		return nil, errors.New("invalid refresh token")
+	}
+
+	userIDFloat, ok := claims["user_id"].(float64)
+	if !ok {
+		return nil, errors.New("invalid token claims")
+	}
+	userID := uint(userIDFloat)
+
+	var user models.User
+	if err := s.repo.FindByID(&user, userID); err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	// Generate new tokens
+	accessToken, err := utils.GenerateToken(user.ID, user.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	// We can either return the same refresh token or a new one
+	// Here we return a new one as well
+	newRefreshToken, err := utils.GenerateRefreshToken(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &utils.TokenDetails{
+		AccessToken:  accessToken,
+		RefreshToken: newRefreshToken,
+	}, nil
 }
 
 // SendEmailOTP resends the OTP to the user
