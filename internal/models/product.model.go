@@ -22,8 +22,8 @@ type Product struct {
 
 	IsActive  bool           `gorm:"default:true;index" json:"is_active"`
 	IsCarted  bool           `gorm:"default:false" json:"is_carted"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	// CreatedAt time.Time      `json:"created_at"`
+	// UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 
 	Variants []ProductVariant `gorm:"foreignKey:ProductID" json:"variants,omitempty"`
