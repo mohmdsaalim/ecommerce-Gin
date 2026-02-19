@@ -64,6 +64,9 @@ func (s *OrderService) CreateOrder(userID uint) (*models.Order, error) {
 	}
 
 	// 5️⃣ Clear Cart Items
+	for _, item := range cart.Items {
+		s.repo.UpdateFields(&models.Product{}, item.ProductID, map[string]interface{}{"is_carted": false})
+	}
 	s.repo.Delete(&models.CartItem{}, "cart_id = ?", cart.ID)
 
 	return &order, nil

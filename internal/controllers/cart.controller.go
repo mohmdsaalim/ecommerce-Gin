@@ -16,7 +16,7 @@ func NewCartController(service *services.CartService) *CartController {
 	return &CartController{service: service}
 }
 
-// Get the Cart item 
+// Get the Cart item
 func (cc *CartController) GetCart(c *gin.Context) {
 
 	userID := c.GetUint("userID") // from JWT middleware
@@ -55,6 +55,10 @@ func (cc *CartController) AddToCart(c *gin.Context) {
 	)
 
 	if err != nil {
+		if err.Error() == "item already in cart" {
+			c.JSON(http.StatusConflict, gin.H{"message": "item already in cart"})
+			return
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -82,8 +86,6 @@ func (cc *CartController) UpdateItem(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "updated"})
 }
-
-
 
 // Remove item from cart
 func (cc *CartController) RemoveItem(c *gin.Context) {

@@ -19,15 +19,14 @@ func NewCartService(repo repositories.Repository) *CartService {
 func (s *CartService) GetCart(userID uint) (*models.Cart, error) {
 	var cart models.Cart
 
-	err := s.repo.FindOne(&cart, "user_id = ?",[]string{"Items", "Items.Product", "Items.Variant"}, userID)
-	
+	err := s.repo.FindOne(&cart, "user_id = ?", []string{"Items", "Items.Product", "Items.Variant"}, userID)
+
 	if err != nil {
 		return nil, err
 	}
 
 	return &cart, nil
 }
-
 
 // Add to Cart
 func (s *CartService) AddToCart(userID, productID, variantID uint, qty int) error {
@@ -39,7 +38,7 @@ func (s *CartService) AddToCart(userID, productID, variantID uint, qty int) erro
 	var cart models.Cart
 
 	// 1️Check if cart exists
-	err := s.repo.FindOne(&cart, "user_id = ?",nil,userID)
+	err := s.repo.FindOne(&cart, "user_id = ?", nil, userID)
 
 	if err != nil {
 		// If not found → create new cart
@@ -55,14 +54,13 @@ func (s *CartService) AddToCart(userID, productID, variantID uint, qty int) erro
 	var item models.CartItem
 	err = s.repo.FindOne(
 		&item,
-		"cart_id = ? AND product_id = ? AND variant_id = ?",nil,
+		"cart_id = ? AND product_id = ? AND variant_id = ?", nil,
 		cart.ID, productID, variantID,
 	)
 
 	if err == nil {
-		// Already exists → update quantity
-		item.Quantity += qty
-		return s.repo.UpdateByID(&models.CartItem{}, item.ID, item)
+		// Already exists → return error
+		return errors.New("item already in cart")
 	}
 
 	// 3️ Insert new cart item
@@ -74,10 +72,13 @@ func (s *CartService) AddToCart(userID, productID, variantID uint, qty int) erro
 		Price:     100, // TODO: fetch actual product price
 	}
 
-	return s.repo.Insert(&newItem)
+	if err := s.repo.Insert(&newItem); err != nil {
+		return err
+	}
+
+	// Update product is_carted to true
+	return s.repo.UpdateFields(&models.Product{}, productID, map[string]interface{}{"is_carted": true})
 }
-
-
 
 // update cart item
 func (s *CartService) UpdateCartItem(itemID uint, qty int) error {
@@ -96,9 +97,17 @@ func (s *CartService) UpdateCartItem(itemID uint, qty int) error {
 	return s.repo.UpdateByID(&models.CartItem{}, itemID, item)
 }
 
-
-
 // to remove the cart item
 func (s *CartService) RemoveItem(itemID uint) error {
-	return s.repo.Delete(&models.CartItem{},"id = ?", itemID)
+	var item models.CartItem
+	if err := s.repo.FindByID(&item, itemID); err != nil {
+		return err
+	}
+
+	if err := s.repo.Delete(&models.CartItem{}, "id = ?", itemID); err != nil {
+		return err
+	}
+
+	// Update product is_carted to false
+	return s.repo.UpdateFields(&models.Product{}, item.ProductID, map[string]interface{}{"is_carted": false})
 }
