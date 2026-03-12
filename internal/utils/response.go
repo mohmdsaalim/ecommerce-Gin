@@ -20,7 +20,7 @@ func SuccessResponse(c *gin.Context, statusCode int, message string, data interf
 		Data:    data,
 	})
 }
-
+// checked
 // ErrorResponse sends an error API response
 func ErrorResponse(c *gin.Context, statusCode int, message string, err string) {
 	c.JSON(statusCode, APIResponse{
